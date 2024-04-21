@@ -1,15 +1,16 @@
+from decimal import Decimal
 from figures.point2d import Point2d
 
 
 class Vector2d:
-    x: float
-    y: float
+    x: Decimal
+    y: Decimal
 
-    def __init__(self, x: float, y: float) -> None:
+    def __init__(self, x: Decimal, y: Decimal) -> None:
         self.x = x
         self.y = y
 
-    def dot(self, that: 'Vector2d') -> float:
+    def dot(self, that: 'Vector2d') -> Decimal:
         return self.x * that.x + self.y * that.y
 
 def make_vector_from_points(p1: Point2d, p2: Point2d) -> Vector2d:

@@ -1,9 +1,11 @@
+from decimal import Decimal
 import os
 
 from figures.point2d import Point2d
 from figures.point3d import Point3d
 from task import solve as tasksolver
 from appendix import solve as appendixsolver
+from universal import solve as polygonsolver
 
 
 def readfile(file_path: str) -> None:
@@ -18,11 +20,11 @@ def readfile(file_path: str) -> None:
             curr2Point = None
             curr3Point = None
             if len(numbers) == 2 and not file_of_three_d:
-                curr2Point = Point2d(float(numbers[0]), float(numbers[1]))
+                curr2Point = Point2d(Decimal(numbers[0]), Decimal(numbers[1]))
                 file_of_two_d = True
                 points2d.append(curr2Point)
             elif len(numbers) == 3 and not file_of_two_d:
-                curr3Point = Point3d(float(numbers[0]), float(numbers[1]), float(numbers[2]))
+                curr3Point = Point3d(Decimal(numbers[0]), Decimal(numbers[1]), Decimal(numbers[2]))
                 file_of_three_d = True
                 points3d.append(curr3Point)
             else:
@@ -34,8 +36,10 @@ def readfile(file_path: str) -> None:
 
         if file_of_two_d:
             tasksolver(points2d)
-        elif file_of_three_d:
+        elif file_of_three_d and len(points3d) <= 5:
             appendixsolver(points3d)
+        elif file_of_three_d and len(points3d) > 5:
+            polygonsolver(points3d)
 
 
 def main():

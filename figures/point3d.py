@@ -1,12 +1,12 @@
-import math
+from decimal import Decimal
 
 
 class Point3d:
-    x: float
-    y: float
-    z: float
+    x: Decimal
+    y: Decimal
+    z: Decimal
 
-    def __init__(self, x: float, y: float, z: float) -> None:
+    def __init__(self, x: Decimal, y: Decimal, z: Decimal) -> None:
         self.x = x
         self.y = y
         self.z = z
@@ -14,5 +14,5 @@ class Point3d:
     def __str__(self) -> str:
         return f"x = {self.x}, y = {self.y}, z = {self.z}"
 
-    def get_distance_to(self, that: 'Point3d') -> float:
-        return math.sqrt(math.pow(self.x - that.x, 2) + math.pow(self.y - that.y, 2) + math.pow(self.z - that.z, 2))
+    def get_distance_to(self, that: 'Point3d') -> Decimal:
+        return (((self.x - that.x) ** 2) + ((self.y - that.y) ** 2) + ((self.z - that.z) ** 2)).sqrt()

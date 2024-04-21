@@ -1,6 +1,7 @@
 from figures.point2d import Point2d
 from figures.point3d import Point3d
-from figures.rect import Rect, make_rect_with_3_points
+from figures.rect import Rect, make_rect_with_triangle
+from figures.triangle import Triangle
 
 
 class Cuboid:
@@ -45,8 +46,11 @@ class Cuboid:
                 elif z_same:
                     list2dcandidates.append(Point2d(candidate.x, candidate.y))
 
-            rect = make_rect_with_3_points(list2dcandidates[0], list2dcandidates[1], list2dcandidates[2])
-            if not rect.is_valid():
+            tri = Triangle(list2dcandidates[0], list2dcandidates[1], list2dcandidates[2])
+            tri.calculate_sides()
+            tri.calculate_angles()
+            rect = make_rect_with_triangle(tri)
+            if not rect.is_valid_tri():
                 continue
 
             self.rect1 = rect

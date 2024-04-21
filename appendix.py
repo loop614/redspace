@@ -14,6 +14,12 @@ def solve(points: list[Point3d]):
 
     if c.is_cube():
         print("it is_cube")
+    else:
+        print("it is not a cube")
 
     if c.is_point_inside(x):
+        print(f"True")
         print(f"x = {x} is inside of cuboid")
+    else:
+        print(f"False")
+        print(f"x = {x} is not inside of cuboid")

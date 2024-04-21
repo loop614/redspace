@@ -1,5 +1,6 @@
-import math
+from decimal import Decimal
 from figures.point2d import Point2d
+from figures.triangle import Triangle
 from figures.vector2d import make_vector_from_points
 
 
@@ -8,46 +9,33 @@ class Rect:
     b: Point2d
     c: Point2d
     d: Point2d
+    tri_abc: Triangle
     is_square: bool
     center: Point2d
-    diaginal_len: float
+    diaginal_len: Decimal
+    ANGLE_ERROR_TOLARANCE = 0.05
 
     def __str__(self) -> str:
         return f"a => {self.a}\nb => {self.b}\nc => {self.c}\nd => {self.d}"
 
-    def is_valid(self) -> bool:
-        sidea = self.b.get_distance_to(self.c)
-        sideb = self.a.get_distance_to(self.c)
-        sidec = self.a.get_distance_to(self.b)
-
-        alpha = math.degrees(
-            math.acos((sideb**2 + sidec**2 - sidea**2) / (2 * sideb * sidec))
-        )
-        gama = math.degrees(
-            math.acos((sidea**2 + sideb**2 - sidec**2) / (2 * sidea * sideb))
-        )
-        beta = 180 - alpha - gama
-        print("found triangle with")
-        print(f"angles {alpha}, {beta}, {gama}")
-        print(f"sides {sidea}, {sideb}, {sidec}")
-
+    def is_valid_tri(self) -> bool:
         is_rect = False
-        if self.is90(alpha):
-            self.diaginal_len = sidea
+        if self.is90(self.tri_abc.alpha):
+            self.diaginal_len = Decimal(self.tri_abc.sidea)
             is_rect = True
-            self.is_square = self.is45(beta) and self.is45(gama)
+            self.is_square = self.is45(self.tri_abc.beta) and self.is45(self.tri_abc.gama)
             self.calcualte_center(self.b, self.c)
             self.calculate_d(self.center, self.a)
-        elif self.is90(beta):
-            self.diaginal_len = sideb
+        elif self.is90(self.tri_abc.beta):
+            self.diaginal_len = Decimal(self.tri_abc.sideb)
             is_rect = True
-            self.is_square = self.is45(alpha) and self.is45(gama)
+            self.is_square = self.is45(self.tri_abc.alpha) and self.is45(self.tri_abc.gama)
             self.calcualte_center(self.a, self.c)
             self.calculate_d(self.center, self.b)
-        elif self.is90(gama):
-            self.diaginal_len = sidec
+        elif self.is90(self.tri_abc.gama):
+            self.diaginal_len = Decimal(self.tri_abc.sidec)
             is_rect = True
-            self.is_square = self.is45(alpha) and self.is45(beta)
+            self.is_square = self.is45(self.tri_abc.alpha) and self.is45(self.tri_abc.beta)
             self.calcualte_center(self.a, self.b)
             self.calculate_d(self.center, self.c)
 
@@ -57,11 +45,11 @@ class Rect:
 
         return is_rect
 
-    def is90(self, angle: float) -> bool:
-        return abs(90 - angle) < 0.00001
+    def is90(self, angle: Decimal) -> bool:
+        return abs(90 - angle) < self.ANGLE_ERROR_TOLARANCE
 
-    def is45(self, angle: float) -> bool:
-        return abs(45 - angle) < 0.00001
+    def is45(self, angle: Decimal) -> bool:
+        return abs(45 - angle) < self.ANGLE_ERROR_TOLARANCE
 
     def calcualte_center(self, p1: Point2d, p2: Point2d) -> None:
         self.center = Point2d((p1.x + p2.x) / 2, (p1.y + p2.y) / 2)
@@ -85,10 +73,11 @@ class Rect:
         return 0 <= dotABAM and dotABAM <= dotABAB and 0 <= dotBCBM and dotBCBM <= dotBCBC
 
 
-def make_rect_with_3_points(a: Point2d, b: Point2d, c: Point2d) -> Rect:
+def make_rect_with_triangle(tri: Triangle) -> Rect:
     rect = Rect()
-    rect.a = a
-    rect.b = b
-    rect.c = c
+    rect.tri_abc = tri
+    rect.a = tri.a
+    rect.b = tri.b
+    rect.c = tri.c
 
     return rect

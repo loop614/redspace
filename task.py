@@ -1,5 +1,6 @@
 from figures.point2d import Point2d
-from figures.rect import Rect, make_rect_with_3_points
+from figures.rect import Rect, make_rect_with_triangle
+from figures.triangle import Triangle
 
 
 def solve(points: list[Point2d]):
@@ -7,10 +8,14 @@ def solve(points: list[Point2d]):
         print("ERROR: Expected to find 4 points for solving the task")
         return
 
-    rect: Rect = make_rect_with_3_points(points[0], points[1], points[2])
+    tri: Triangle = Triangle(points[0], points[1], points[2])
     x: Point2d = points[3]
 
-    if not rect.is_valid():
+    tri.calculate_sides()
+    tri.calculate_angles()
+    rect = make_rect_with_triangle(tri)
+
+    if not rect.is_valid_tri():
         print("false")
         print("ERROR task: Could not make a rectangle from given points")
         return
