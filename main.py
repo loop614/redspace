@@ -9,7 +9,7 @@ from task import solve as tasksolver
 from universal import solve as polygonsolver
 
 
-def readfile(file_path: str) -> None:
+def solvefile(file_path: str) -> None:
     file_of_two_d = False
     file_of_three_d = False
     points2d = []
@@ -51,13 +51,13 @@ def main():
     for task1file in os.listdir('taskfiles'):
         if task1file.endswith('.txt'):
             print(task1file)
-            readfile(os.path.join('taskfiles', task1file))
+            solvefile(os.path.join('taskfiles', task1file))
             print('')
 
     for appendixfile in os.listdir('appendixfiles'):
         if appendixfile.endswith('.txt'):
             print(appendixfile)
-            readfile(os.path.join('appendixfiles', appendixfile))
+            solvefile(os.path.join('appendixfiles', appendixfile))
             print('')
 
 

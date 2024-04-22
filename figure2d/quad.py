@@ -1,18 +1,22 @@
 from __future__ import annotations
 
-from figure2d.figure2d_base import Figure2d
+from figure2d.figure2dbase import Figure2d
 from figure2d.triangle import Triangle
 from primary.distance import Distance
 from primary.point import Point
 from primary.vector2d import make_vector_from_points
 
 
-class Rect(Figure2d):
+class Quad(Figure2d):
     a: Point
     b: Point
     c: Point
     d: Point
-    is_valid: bool
+    sideab: Distance
+    sidebc: Distance
+    sidecd: Distance
+    sideda: Distance
+    is_rect: bool
     is_square: bool
     tri_abc: Triangle
     center: Point
@@ -24,42 +28,47 @@ class Rect(Figure2d):
     def __str__(self) -> str:
         return f'a => {self.a}\nb => {self.b}\nc => {self.c}\nd => {self.d}'
 
-    def calculate_is_valid(self) -> None:
-        self.is_valid = False
+    def calculate_is_rect(self) -> None:
+        self.is_rect = False
         if self.tri_abc.alpha.is90():
             self.diaginal_len = self.tri_abc.sidea
-            self.is_valid = True
+            self.is_rect = True
             self.is_square = self.tri_abc.beta.is45() and self.tri_abc.gama.is45()
-            self.calculate_center(self.b, self.c)
-            self.calculate_d(self.center, self.a)
+            self.calculate_d(self.b, self.c, self.a)
         elif self.tri_abc.beta.is90():
             self.diaginal_len = self.tri_abc.sideb
-            self.is_valid = True
+            self.is_rect = True
             self.is_square = self.tri_abc.alpha.is45() and self.tri_abc.gama.is45()
-            self.calculate_center(self.a, self.c)
-            self.calculate_d(self.center, self.b)
+            self.calculate_d(self.a, self.c, self.b)
         elif self.tri_abc.gama.is90():
             self.diaginal_len = self.tri_abc.sidec
-            self.is_valid = True
+            self.is_rect = True
             self.is_square = self.tri_abc.alpha.is45() and self.tri_abc.beta.is45()
-            self.calculate_center(self.a, self.b)
-            self.calculate_d(self.center, self.c)
+            self.calculate_d(self.a, self.b, self.c)
 
-        if self.is_valid:
+        if self.is_rect:
+            self.calculate_sides()
             print(f'found center at {self.center}')
             print(f'found d point at {self.d}')
+
+    def calculate_d(self, centerLeft: Point, centerRight: Point, dOpposite: Point) -> None:
+        self.calculate_center(centerLeft, centerRight)
+        self.d = Point(
+            (self.center.x - dOpposite.x) + self.center.x,
+            (self.center.y - dOpposite.y) + self.center.y,
+            (self.center.z - dOpposite.z) + self.center.z,
+        )
 
     def calculate_center(self, p1: Point, p2: Point) -> None:
         self.center = Point(
             (p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2,
         )
 
-    def calculate_d(self, center: Point, p: Point) -> None:
-        self.d = Point(
-            (center.x - p.x) + center.x,
-            (center.y - p.y) + center.y,
-            (center.z - p.z) + center.z,
-        )
+    def calculate_sides(self) -> None:
+        self.sideab = self.a.get_distance_to(self.b)
+        self.sidebc = self.b.get_distance_to(self.c)
+        self.sidecd = self.c.get_distance_to(self.d)
+        self.sideda = self.d.get_distance_to(self.a)
 
     def is_point_inside(self, x: Point) -> bool:
         ab = make_vector_from_points(self.a, self.b)
@@ -76,12 +85,12 @@ class Rect(Figure2d):
         )
 
 
-def make_rect_with_triangle(tri: Triangle) -> Rect:
-    rect = Rect()
+def make_quad_with_triangle(tri: Triangle) -> Quad:
+    rect = Quad()
     rect.tri_abc = tri
     rect.a = tri.a
     rect.b = tri.b
     rect.c = tri.c
-    rect.calculate_is_valid()
+    rect.calculate_is_rect()
 
     return rect

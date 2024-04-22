@@ -3,7 +3,7 @@ from __future__ import annotations
 import math
 from decimal import Decimal
 
-from figure2d.figure2d_base import Figure2d
+from figure2d.figure2dbase import Figure2d
 from primary.angle import Angle
 from primary.distance import Distance
 from primary.point import Point

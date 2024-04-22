@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from figure3d.figure3d_base import Figure3d
+from figure3d.figure3dbase import Figure3d
 from primary.point import Point
 
 

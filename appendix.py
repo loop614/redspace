@@ -13,6 +13,7 @@ def solve(points: list[Point]):
     x: Point = points[4]
     if c.is_rectangular_prism:
         print('it is_rectangular_prism')
+        print(f'space diagonal = {c.space_diagonal}')
     else:
         print('it is not a rectangular_prism')
         print('please provide 3 points from one rectangle and one point from another cuboid rectangle')
