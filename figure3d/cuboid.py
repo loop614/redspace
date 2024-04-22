@@ -1,21 +1,26 @@
-from figure3d.base import Figure3d
-from primary.point3d import Point3d
-from figure2d.rect import Rect, make_rect_with_triangle
+from __future__ import annotations
+
+from decimal import Decimal
+
+from figure2d.rect import make_rect_with_triangle
+from figure2d.rect import Rect
 from figure2d.triangle import Triangle
+from figure3d.figure3d_base import Figure3d
+from primary.point import Point
 
 
 class Cuboid(Figure3d):
-    a: Point3d
-    b: Point3d
-    c: Point3d
-    d: Point3d
+    a: Point
+    b: Point
+    c: Point
+    d: Point
     rect1: Rect
     is_rectangular_prism: bool
     is_cube: bool
-    second_rect_point: Point3d
-    DISTANCE_ERROR_TOLARANCE = 0.05
+    space_diagonal: Decimal
+    second_rect_point: Point
 
-    def __init__(self, a: Point3d, b: Point3d, c: Point3d, d: Point3d) -> None:
+    def __init__(self, a: Point, b: Point, c: Point, d: Point) -> None:
         self.a = a
         self.b = b
         self.c = c
@@ -49,7 +54,7 @@ class Cuboid(Figure3d):
                 continue
 
             tri = Triangle(
-                candidate_for_rect[0], candidate_for_rect[1], candidate_for_rect[2]
+                candidate_for_rect[0], candidate_for_rect[1], candidate_for_rect[2],
             )
             rect = make_rect_with_triangle(tri)
             if not rect.is_valid:
@@ -81,21 +86,27 @@ class Cuboid(Figure3d):
                 point.x == self.second_rect_point.x
                 and point.y == self.second_rect_point.y
             ):
-                self.is_cube = d - self.second_rect_point.get_distance_to(point) < self.DISTANCE_ERROR_TOLARANCE
+                self.is_cube = d.is_equal(
+                    self.second_rect_point.get_distance_to(point),
+                )
                 return
             elif (
                 point.y == self.second_rect_point.y
                 and point.z == self.second_rect_point.z
             ):
-                self.is_cube = d - self.second_rect_point.get_distance_to(point) < self.DISTANCE_ERROR_TOLARANCE
+                self.is_cube = d.is_equal(
+                    self.second_rect_point.get_distance_to(point),
+                )
                 return
             elif (
                 point.x == self.second_rect_point.x
                 and point.z == self.second_rect_point.z
             ):
-                self.is_cube = d - self.second_rect_point.get_distance_to(point) < self.DISTANCE_ERROR_TOLARANCE
+                self.is_cube = d.is_equal(
+                    self.second_rect_point.get_distance_to(point),
+                )
                 return
         self.is_cube = False
 
-    def is_point_inside(self, x: Point3d) -> bool:
+    def is_point_inside(self, x: Point) -> bool:
         return False

@@ -1,13 +1,14 @@
-from figure3d.base import Figure3d
-from primary.point2d import Point2d
-from primary.point3d import Point3d
+from __future__ import annotations
+
+from figure3d.figure3d_base import Figure3d
+from primary.point import Point
 
 
 class Polygon(Figure3d):
-    points: list[Point3d]
-    shape1_points: list[Point3d]
-    shape2_points: list[Point3d]
-    second_shape_point: Point3d
+    points: list[Point]
+    shape1_points: list[Point]
+    shape2_points: list[Point]
+    second_shape_point: Point
 
     def is_polygon(self) -> bool:
         for point in self.points:

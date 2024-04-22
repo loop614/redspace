@@ -1,10 +1,11 @@
-from decimal import Decimal
-import os
+from __future__ import annotations
 
-from primary.point2d import Point2d
-from primary.point3d import Point3d
-from task import solve as tasksolver
+import os
+from decimal import Decimal
+
 from appendix import solve as appendixsolver
+from primary.point import Point
+from task import solve as tasksolver
 from universal import solve as polygonsolver
 
 
@@ -14,23 +15,27 @@ def readfile(file_path: str) -> None:
     points2d = []
     points3d = []
 
-    with open(file_path, "r") as file:
+    with open(file_path) as file:
         for line in file.readlines():
-            numbers = line.strip().split(",")
+            numbers = line.strip().split(',')
             curr2Point = None
             curr3Point = None
             if len(numbers) == 2 and not file_of_three_d:
-                curr2Point = Point2d(Decimal(numbers[0]), Decimal(numbers[1]))
+                curr2Point = Point(Decimal(numbers[0]), Decimal(numbers[1]))
                 file_of_two_d = True
                 points2d.append(curr2Point)
             elif len(numbers) == 3 and not file_of_two_d:
-                curr3Point = Point3d(Decimal(numbers[0]), Decimal(numbers[1]), Decimal(numbers[2]))
+                curr3Point = Point(
+                    Decimal(numbers[0]), Decimal(
+                        numbers[1],
+                    ), Decimal(numbers[2]),
+                )
                 file_of_three_d = True
                 points3d.append(curr3Point)
             else:
                 print(
-                    "File not in expected format. Skipping line.",
-                    "Please provide file with 2 or 3 comma seprated numbers in line, with 4 or 5 lines"
+                    'File not in expected format. Skipping line.',
+                    'Please provide file with 2 or 3 comma seprated numbers in line, with 4 or 5 lines',
                 )
                 continue
 
@@ -43,18 +48,18 @@ def readfile(file_path: str) -> None:
 
 
 def main():
-    for task1file in os.listdir("taskfiles"):
-        if task1file.endswith(".txt"):
+    for task1file in os.listdir('taskfiles'):
+        if task1file.endswith('.txt'):
             print(task1file)
-            readfile(os.path.join("taskfiles", task1file))
-            print("")
+            readfile(os.path.join('taskfiles', task1file))
+            print('')
 
-    for appendixfile in os.listdir("appendixfiles"):
-        if appendixfile.endswith(".txt"):
+    for appendixfile in os.listdir('appendixfiles'):
+        if appendixfile.endswith('.txt'):
             print(appendixfile)
-            readfile(os.path.join("appendixfiles", appendixfile))
-            print("")
+            readfile(os.path.join('appendixfiles', appendixfile))
+            print('')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     raise SystemExit(main())
