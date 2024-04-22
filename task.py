@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from figure2d.quad import make_quad_with_triangle
-from figure2d.triangle import Triangle
+from figure.quad import make_quad_with_triangle
+from figure.triangle import Triangle
 from primary.point import Point
 
 

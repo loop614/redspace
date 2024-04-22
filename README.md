@@ -39,5 +39,5 @@ False
 
 ## Quick Start
 ```console
-➜  python3 main.py
+$ python3 main.py
 ```

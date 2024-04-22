@@ -1,23 +1,28 @@
 from __future__ import annotations
 
-from figure2d.quad import make_quad_with_triangle
-from figure2d.quad import Quad
-from figure2d.triangle import Triangle
-from figure3d.figure3dbase import Figure3d
+from figure.quad import make_quad_with_triangle
+from figure.quad import Quad
+from figure.triangle import Triangle
 from primary.distance import Distance
 from primary.point import Point
+from primary.vector import make_vector_from_points
+from primary.vector import Vector
 
 
-class Cuboid(Figure3d):
+class Cuboid:
     a: Point
     b: Point
     c: Point
     d: Point
-    rect1: Quad
+    u: Vector
+    v: Vector
+    w: Vector
+    quad1: Quad
     is_rectangular_prism: bool
     is_cube: bool
-    space_diagonal: Distance
+    spational_diagonal: Distance
     second_rect_point: Point
+    second_rect_point_bellow: Point
     second_rect_side: Distance
 
     def __init__(self, a: Point, b: Point, c: Point, d: Point) -> None:
@@ -59,27 +64,33 @@ class Cuboid(Figure3d):
                 candidate_for_rect[1],
                 candidate_for_rect[2],
             )
-            self.rect1 = make_quad_with_triangle(tri)
-            if not self.rect1.is_rect:
+            self.quad1 = make_quad_with_triangle(tri)
+            if not self.quad1.is_rect:
                 continue
 
             self.second_rect_point = point
             for candidate in candidate_for_rect:
                 if point.x == candidate.x and point.y == candidate.y:
+                    self.second_rect_point_bellow = candidate
                     self.is_rectangular_prism = True
+                    break
                 elif point.y == candidate.y and point.z == candidate.z:
+                    self.second_rect_point_bellow = candidate
                     self.is_rectangular_prism = True
+                    break
                 elif point.x == candidate.x and point.z == candidate.z:
+                    self.second_rect_point_bellow = candidate
                     self.is_rectangular_prism = True
+                    break
 
     def calculate_is_cube(self) -> None:
         if not self.is_rectangular_prism:
             self.is_cube = False
 
-        if not self.rect1.is_square:
+        if not self.quad1.is_square:
             self.is_cube = False
 
-        d = self.rect1.a.get_distance_to(self.rect1.b)
+        d = self.quad1.a.get_distance_to(self.quad1.b)
         for point in [self.a, self.b, self.c, self.d]:
             if point is self.second_rect_point:
                 continue
@@ -114,13 +125,37 @@ class Cuboid(Figure3d):
         self.is_cube = False
 
     def calculate_diagonal(self) -> None:
-        self.space_diagonal = Distance(
+        self.spational_diagonal = Distance(
             (
-                self.rect1.sideab.val**2
-                + self.rect1.sidebc.val**2
+                self.quad1.sideab.val**2
+                + self.quad1.sidebc.val**2
                 + self.second_rect_side.val**2
             ).sqrt(),
         )
 
     def is_point_inside(self, x: Point) -> bool:
+        other_two_points: list[Point] = []
+        for point in [self.a, self.b, self.c, self.d]:
+            if (
+                point is not self.second_rect_point
+                and point is not self.second_rect_point_bellow
+            ):
+                other_two_points.append(point)
+
+        # https://math.stackexchange.com/questions/1472049/check-if-a-point-is-inside-a-rectangular-shaped-area-3d
+        p1 = self.second_rect_point_bellow
+        p5 = self.second_rect_point
+        p2 = other_two_points[0]
+        p4 = other_two_points[1]
+
+        self.u = make_vector_from_points(p1, p4).cross(
+            make_vector_from_points(p1, p5),
+        )
+        self.v = make_vector_from_points(p1, p2).cross(
+            make_vector_from_points(p1, p5),
+        )
+        self.w = make_vector_from_points(p1, p2).cross(
+            make_vector_from_points(p1, p4),
+        )
+
         return False

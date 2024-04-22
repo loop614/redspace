@@ -3,13 +3,12 @@ from __future__ import annotations
 import math
 from decimal import Decimal
 
-from figure2d.figure2dbase import Figure2d
 from primary.angle import Angle
 from primary.distance import Distance
 from primary.point import Point
 
 
-class Triangle(Figure2d):
+class Triangle:
     a: Point
     b: Point
     c: Point

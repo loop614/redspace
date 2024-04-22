@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from figure2d.figure2dbase import Figure2d
-from figure2d.triangle import Triangle
+from figure.triangle import Triangle
 from primary.distance import Distance
 from primary.point import Point
-from primary.vector2d import make_vector_from_points
+from primary.vector import make_vector_from_points
 
 
-class Quad(Figure2d):
+class Quad:
     a: Point
     b: Point
     c: Point
