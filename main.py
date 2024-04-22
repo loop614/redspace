@@ -1,8 +1,8 @@
 from decimal import Decimal
 import os
 
-from figures.point2d import Point2d
-from figures.point3d import Point3d
+from primary.point2d import Point2d
+from primary.point3d import Point3d
 from task import solve as tasksolver
 from appendix import solve as appendixsolver
 from universal import solve as polygonsolver

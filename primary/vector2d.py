@@ -1,5 +1,5 @@
 from decimal import Decimal
-from figures.point2d import Point2d
+from primary.point import Point
 
 
 class Vector2d:
@@ -13,5 +13,5 @@ class Vector2d:
     def dot(self, that: 'Vector2d') -> Decimal:
         return self.x * that.x + self.y * that.y
 
-def make_vector_from_points(p1: Point2d, p2: Point2d) -> Vector2d:
+def make_vector_from_points(p1: Point, p2: Point) -> Vector2d:
     return Vector2d(p2.x - p1.x, p2.y - p1.y)

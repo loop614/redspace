@@ -1,7 +1,7 @@
+from abc import abstractmethod
 from decimal import Decimal
 
-
-class Point2d:
+class Point():
     x: Decimal
     y: Decimal
 
@@ -12,5 +12,5 @@ class Point2d:
     def __str__(self) -> str:
         return f"x = {self.x}, y = {self.y}"
 
-    def get_distance_to(self, that: "Point2d") -> Decimal:
+    def get_distance_to(self, that: 'Point') -> Decimal:
         return (((self.x - that.x) ** 2) + ((self.y - that.y) ** 2)).sqrt()

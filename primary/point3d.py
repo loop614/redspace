@@ -1,14 +1,13 @@
 from decimal import Decimal
 
+from primary.point import Point
 
-class Point3d:
-    x: Decimal
-    y: Decimal
+
+class Point3d(Point):
     z: Decimal
 
     def __init__(self, x: Decimal, y: Decimal, z: Decimal) -> None:
-        self.x = x
-        self.y = y
+        super().__init__(x, y)
         self.z = z
 
     def __str__(self) -> str:
