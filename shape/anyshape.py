@@ -8,14 +8,14 @@ from primary.point import Point
 
 class AnyShape:
     points: list[Point]
-    sides: list[Distance]
+    polygon1_points: list[Point]
+    polygon2_points: list[Point]
+    polygon1_sides: list[Distance]
     is_valid: bool
     spational_diagonal: Distance
-    shape1_points: list[Point]
-    shape2_points: list[Point]
-    second_shape_point: Point
-    second_shape_point_bellow: Point
-    second_shape_side: Distance
+    second_polygon_point: Point
+    second_polygon_point_bellow: Point
+    second_polygon_side: Distance
     are_all_sides_equal: bool
 
     def __init__(self, points: list[Point]) -> None:
@@ -23,7 +23,7 @@ class AnyShape:
         self.spational_diagonal = Distance(Decimal(0))
         self.are_all_sides_equal = False
         self.is_valid = False
-        self.sides = []
+        self.polygon1_sides = []
         self.is_polygon()
         self.calculate_sides()
         self.calculate_diagonal()
@@ -51,29 +51,29 @@ class AnyShape:
             if not x_same and not y_same and not z_same:
                 continue
 
-            self.shape1_points = candidate_for_rect
-            self.second_shape_point = point
+            self.polygon1_points = candidate_for_rect
+            self.second_polygon_point = point
             for candidate in candidate_for_rect:
                 if point.x == candidate.x and point.y == candidate.y:
-                    self.second_shape_point_bellow = candidate
+                    self.second_polygon_point_bellow = candidate
                     self.is_valid = True
                     break
                 elif point.y == candidate.y and point.z == candidate.z:
-                    self.second_shape_point_bellow = candidate
+                    self.second_polygon_point_bellow = candidate
                     self.is_valid = True
                     break
                 elif point.x == candidate.x and point.z == candidate.z:
-                    self.second_shape_point_bellow = candidate
+                    self.second_polygon_point_bellow = candidate
                     self.is_valid = True
                     break
 
     def calculate_sides(self) -> None:
         d = self.points[0].get_distance_to(self.points[1])
         self.are_all_sides_equal = True
-        self.second_shape_side = self.second_shape_point.get_distance_to(
-            self.second_shape_point_bellow,
+        self.second_polygon_side = self.second_polygon_point.get_distance_to(
+            self.second_polygon_point_bellow,
         )
-        if d != self.second_shape_side:
+        if d != self.second_polygon_side:
             self.are_all_sides_equal = False
 
         for index, point in enumerate(self.points):
@@ -85,7 +85,7 @@ class AnyShape:
             if d != curr:
                 self.are_all_sides_equal = False
 
-            self.sides.append(curr)
+            self.polygon1_sides.append(curr)
 
     def calculate_diagonal(self) -> None:
         pass

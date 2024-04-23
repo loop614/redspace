@@ -37,7 +37,15 @@ False
 ## Requirements
 - python3
 
+## Flags
+- by default runs for taskfiles/input1.txt and appendixfiles/input2.txt
+- extrafiles flag with include all txt files in taskfiles and appendixfiles
+- debug flag will print extra messages
+
 ## Quick Start
+```console
+$ python3 main.py --debug --extrafiles
+```
 ```console
 $ python3 main.py
 ```

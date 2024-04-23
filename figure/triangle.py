@@ -6,6 +6,7 @@ from decimal import Decimal
 from primary.angle import Angle
 from primary.distance import Distance
 from primary.point import Point
+from redlogger import redlog
 
 
 class Triangle:
@@ -30,7 +31,7 @@ class Triangle:
         self.sidea = self.b.get_distance_to(self.c)
         self.sideb = self.a.get_distance_to(self.c)
         self.sidec = self.a.get_distance_to(self.b)
-        print(f'sides {self.sidea}, {self.sideb}, {self.sidec}')
+        redlog(f'sides {self.sidea}, {self.sideb}, {self.sidec}')
 
     def calculate_angles(self) -> None:
         self.alpha = Angle(
@@ -54,4 +55,4 @@ class Triangle:
             ),
         )
         self.beta = Angle(180 - self.alpha.val - self.gama.val)
-        print(f'angles {self.alpha}, {self.beta}, {self.gama}')
+        redlog(f'angles {self.alpha}, {self.beta}, {self.gama}')

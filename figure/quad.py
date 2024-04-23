@@ -4,6 +4,7 @@ from figure.triangle import Triangle
 from primary.distance import Distance
 from primary.point import Point
 from primary.vector import make_vector_from_points
+from redlogger import redlog
 
 
 class Quad:
@@ -47,8 +48,8 @@ class Quad:
 
         if self.is_rect:
             self.calculate_sides()
-            print(f'found center at {self.center}')
-            print(f'found d point at {self.d}')
+            redlog(f'found center at {self.center}')
+            redlog(f'found d point at {self.d}')
 
     def calculate_d(self, centerLeft: Point, centerRight: Point, dOpposite: Point) -> None:
         self.calculate_center(centerLeft, centerRight)

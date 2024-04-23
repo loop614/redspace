@@ -1,31 +1,36 @@
 from __future__ import annotations
 
 from primary.point import Point
+from redlogger import redlog
 from shape.anyshape import AnyShape
 
 
-def solve(points: list[Point]):
+def solve(points: list[Point]) -> int:
     if len(points) < 6:
-        print(
+        redlog(
             'ERROR: Expected to find more than 5 points for solving the universal anyshape',
         )
-        return
+        return 1
 
     poly: AnyShape = AnyShape(points[:-1])
     if poly.is_valid:
-        print('provided points can make a anyshape. Assuming points come in order of connection')
-        print(f'spational diagonal = {poly.spational_diagonal}')
+        redlog(
+            'provided points can make a anyshape. Assuming points come in order of connection',
+        )
+        redlog(f'spational diagonal = {poly.spational_diagonal}')
     else:
-        print('could not make a anyshape from provided points')
-        return
+        redlog('could not make a anyshape from provided points')
+        return 1
 
     if poly.are_all_sides_equal:
-        print('anyshape has all sides equal')
+        redlog('anyshape has all sides equal')
     else:
-        print('anyshape has not all sides equal')
+        redlog('anyshape has not all sides equal')
 
     x: Point = points[-1]
     if poly.is_point_inside(x):
-        print(f'{x} is in the anyshape')
+        redlog(f'{x} is in the anyshape')
     else:
-        print(f'{x} is not in the anyshape')
+        redlog(f'{x} is not in the anyshape')
+
+    return 0
