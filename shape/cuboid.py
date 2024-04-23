@@ -36,12 +36,13 @@ class Cuboid:
 
     def calculate_is_rectangular_prism(self, points_for_cuboid: list[Point]) -> None:
         self.is_rectangular_prism = False
+        point_to_skip = len(points_for_cuboid) - 1
         for point in points_for_cuboid:
             candidate_for_rect = []
-            for point2 in points_for_cuboid:
-                if point is not point2:
+            for j, point2 in enumerate(points_for_cuboid):
+                if j != point_to_skip:
                     candidate_for_rect.append(point2)
-
+            point_to_skip -= 1
             xpivot = candidate_for_rect[0].x
             ypivot = candidate_for_rect[0].y
             zpivot = candidate_for_rect[0].z
@@ -64,23 +65,25 @@ class Cuboid:
                 candidate_for_rect[2],
             )
             self.quadhorz1 = make_quad_with_triangle(tri)
+            redlog(f'self.quadhorz1 is {self.quadhorz1}')
             if not self.quadhorz1.is_rect:
                 continue
 
-            self.second_quad_point = point
+            self.second_quad_point = points_for_cuboid[point_to_skip+1]
             for candidate in candidate_for_rect:
-                if point.x == candidate.x and point.y == candidate.y:
+                if self.second_quad_point.x == candidate.x and self.second_quad_point.y == candidate.y:
                     self.second_quad_point_bellow = candidate
                     self.is_rectangular_prism = True
                     break
-                elif point.y == candidate.y and point.z == candidate.z:
+                elif self.second_quad_point.y == candidate.y and self.second_quad_point.z == candidate.z:
                     self.second_quad_point_bellow = candidate
                     self.is_rectangular_prism = True
                     break
-                elif point.x == candidate.x and point.z == candidate.z:
+                elif self.second_quad_point.x == candidate.x and self.second_quad_point.z == candidate.z:
                     self.second_quad_point_bellow = candidate
                     self.is_rectangular_prism = True
                     break
+            break
 
     def calculate_height(self) -> None:
         for point in self.quadhorz1.get_points():
@@ -148,13 +151,16 @@ class Cuboid:
         quadhorz1 = make_quad_with_triangle(
             Triangle(
                 self.second_quad_point,
-                self.second_quad_point_bellow, linepoints[0],
+                self.second_quad_point_bellow,
+                linepoints[0],
             ),
         )
+
         quadhorz2 = make_quad_with_triangle(
             Triangle(
                 self.second_quad_point,
-                self.second_quad_point_bellow, linepoints[1],
+                self.second_quad_point_bellow,
+                linepoints[1],
             ),
         )
         self.quadhorz2 = make_quad_with_triangle(

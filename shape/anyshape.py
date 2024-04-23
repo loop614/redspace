@@ -29,12 +29,13 @@ class AnyShape:
         self.calculate_diagonal()
 
     def is_polygon(self) -> None:
+        point_to_skip = len(self.points) - 1
         for point in self.points:
             candidate_for_rect = []
-            for point2 in self.points:
-                if point is not point2:
+            for j, point2 in enumerate(self.points):
+                if j != point_to_skip:
                     candidate_for_rect.append(point2)
-
+            point_to_skip -= 1
             xpivot = candidate_for_rect[0].x
             ypivot = candidate_for_rect[0].y
             zpivot = candidate_for_rect[0].z
@@ -52,17 +53,17 @@ class AnyShape:
                 continue
 
             self.polygon1_points = candidate_for_rect
-            self.second_polygon_point = point
+            self.second_polygon_point = self.points[point_to_skip+1]
             for candidate in candidate_for_rect:
-                if point.x == candidate.x and point.y == candidate.y:
+                if self.second_polygon_point.x == candidate.x and self.second_polygon_point.y == candidate.y:
                     self.second_polygon_point_bellow = candidate
                     self.is_valid = True
                     break
-                elif point.y == candidate.y and point.z == candidate.z:
+                elif self.second_polygon_point.y == candidate.y and self.second_polygon_point.z == candidate.z:
                     self.second_polygon_point_bellow = candidate
                     self.is_valid = True
                     break
-                elif point.x == candidate.x and point.z == candidate.z:
+                elif self.second_polygon_point.x == candidate.x and self.second_polygon_point.z == candidate.z:
                     self.second_polygon_point_bellow = candidate
                     self.is_valid = True
                     break
