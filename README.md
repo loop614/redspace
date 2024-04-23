@@ -34,8 +34,17 @@ Input:
 Output:
 False
 
+## Status
+- 2d objects (figure) done
+- 3d objects (shape) work in progress
+    - TODOs:
+        - is point in cuboid
+        - spatial diagonal anyshape
+        - is point in anyshape
+
 ## Requirements
-- python3
+- python3, numpy
+- optional python3-venv
 
 ## Flags
 - by default runs for taskfiles/input1.txt and appendixfiles/input2.txt
@@ -43,6 +52,13 @@ False
 - debug flag will print extra messages
 
 ## Quick Start
+```console
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+$ python3 main.py --debug --extrafiles
+```
+- or if you have numpy on local machine
 ```console
 $ python3 main.py --debug --extrafiles
 ```

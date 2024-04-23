@@ -41,4 +41,4 @@ repos:
     rev: v1.1.1
     hooks:
     -   id: mypy
-        args: [--explicit-package-bases]
+        args: [--explicit-package-bases, '--ignore-missing-imports']
