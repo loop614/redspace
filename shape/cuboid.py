@@ -10,33 +10,26 @@ from primary.vector import Vector
 
 
 class Cuboid:
-    a: Point
-    b: Point
-    c: Point
-    d: Point
-    u: Vector
-    v: Vector
-    w: Vector
-    quad1: Quad
+    quadhorz1: Quad
+    quadhorz2: Quad
+    position1: Vector
+    position2: Vector
+    position3: Vector
     is_rectangular_prism: bool
     is_cube: bool
     spational_diagonal: Distance
-    second_rect_point: Point
-    second_rect_point_bellow: Point
-    second_rect_side: Distance
+    second_quad_point: Point
+    second_quad_point_bellow: Point
+    second_quad_side: Distance
 
     def __init__(self, a: Point, b: Point, c: Point, d: Point) -> None:
-        self.a = a
-        self.b = b
-        self.c = c
-        self.d = d
-        self.calculate_is_rectangular_prism()
+        points = [a, b, c, d]
+        self.calculate_is_rectangular_prism(points)
         self.calculate_is_cube()
         self.calculate_diagonal()
 
-    def calculate_is_rectangular_prism(self) -> None:
+    def calculate_is_rectangular_prism(self, points_for_cuboid: list[Point]) -> None:
         self.is_rectangular_prism = False
-        points_for_cuboid = [self.a, self.b, self.c, self.d]
         for point in points_for_cuboid:
             candidate_for_rect = []
             for point2 in points_for_cuboid:
@@ -64,22 +57,22 @@ class Cuboid:
                 candidate_for_rect[1],
                 candidate_for_rect[2],
             )
-            self.quad1 = make_quad_with_triangle(tri)
-            if not self.quad1.is_rect:
+            self.quadhorz1 = make_quad_with_triangle(tri)
+            if not self.quadhorz1.is_rect:
                 continue
 
-            self.second_rect_point = point
+            self.second_quad_point = point
             for candidate in candidate_for_rect:
                 if point.x == candidate.x and point.y == candidate.y:
-                    self.second_rect_point_bellow = candidate
+                    self.second_quad_point_bellow = candidate
                     self.is_rectangular_prism = True
                     break
                 elif point.y == candidate.y and point.z == candidate.z:
-                    self.second_rect_point_bellow = candidate
+                    self.second_quad_point_bellow = candidate
                     self.is_rectangular_prism = True
                     break
                 elif point.x == candidate.x and point.z == candidate.z:
-                    self.second_rect_point_bellow = candidate
+                    self.second_quad_point_bellow = candidate
                     self.is_rectangular_prism = True
                     break
 
@@ -87,74 +80,70 @@ class Cuboid:
         if not self.is_rectangular_prism:
             self.is_cube = False
 
-        if not self.quad1.is_square:
+        if not self.quadhorz1.is_square:
             self.is_cube = False
 
-        d = self.quad1.a.get_distance_to(self.quad1.b)
-        for point in [self.a, self.b, self.c, self.d]:
-            if point is self.second_rect_point:
-                continue
-
+        d = self.quadhorz1.a.get_distance_to(self.quadhorz1.b)
+        for point in self.quadhorz1.get_points():
             if (
-                point.x == self.second_rect_point.x
-                and point.y == self.second_rect_point.y
+                point.x == self.second_quad_point.x
+                and point.y == self.second_quad_point.y
             ):
-                self.second_rect_side = self.second_rect_point.get_distance_to(
+                self.second_quad_side = self.second_quad_point.get_distance_to(
                     point,
                 )
-                self.is_cube = d.is_equal(self.second_rect_side)
+                self.is_cube = d.is_equal(self.second_quad_side)
                 return
             elif (
-                point.y == self.second_rect_point.y
-                and point.z == self.second_rect_point.z
+                point.y == self.second_quad_point.y
+                and point.z == self.second_quad_point.z
             ):
-                self.second_rect_side = self.second_rect_point.get_distance_to(
+                self.second_quad_side = self.second_quad_point.get_distance_to(
                     point,
                 )
-                self.is_cube = d.is_equal(self.second_rect_side)
+                self.is_cube = d.is_equal(self.second_quad_side)
                 return
             elif (
-                point.x == self.second_rect_point.x
-                and point.z == self.second_rect_point.z
+                point.x == self.second_quad_point.x
+                and point.z == self.second_quad_point.z
             ):
-                self.second_rect_side = self.second_rect_point.get_distance_to(
+                self.second_quad_side = self.second_quad_point.get_distance_to(
                     point,
                 )
-                self.is_cube = d.is_equal(self.second_rect_side)
+                self.is_cube = d.is_equal(self.second_quad_side)
                 return
         self.is_cube = False
 
     def calculate_diagonal(self) -> None:
         self.spational_diagonal = Distance(
             (
-                self.quad1.sideab.val**2
-                + self.quad1.sidebc.val**2
-                + self.second_rect_side.val**2
+                self.quadhorz1.sideab.val**2
+                + self.quadhorz1.sidebc.val**2
+                + self.second_quad_side.val**2
             ).sqrt(),
         )
 
     def is_point_inside(self, x: Point) -> bool:
         other_two_points: list[Point] = []
-        for point in [self.a, self.b, self.c, self.d]:
+        for point in self.quadhorz1.get_points():
             if (
-                point is not self.second_rect_point
-                and point is not self.second_rect_point_bellow
+                point is not self.second_quad_point
+                and point is not self.second_quad_point_bellow
             ):
                 other_two_points.append(point)
 
-        # https://math.stackexchange.com/questions/1472049/check-if-a-point-is-inside-a-rectangular-shaped-area-3d
-        p1 = self.second_rect_point_bellow
-        p5 = self.second_rect_point
+        p1 = self.second_quad_point_bellow
+        p5 = self.second_quad_point
         p2 = other_two_points[0]
         p4 = other_two_points[1]
 
-        self.u = make_vector_from_points(p1, p4).cross(
+        self.position1 = make_vector_from_points(p1, p4).cross(
             make_vector_from_points(p1, p5),
         )
-        self.v = make_vector_from_points(p1, p2).cross(
+        self.position2 = make_vector_from_points(p1, p2).cross(
             make_vector_from_points(p1, p5),
         )
-        self.w = make_vector_from_points(p1, p2).cross(
+        self.position3 = make_vector_from_points(p1, p2).cross(
             make_vector_from_points(p1, p4),
         )
 

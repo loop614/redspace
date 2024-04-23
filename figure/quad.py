@@ -12,21 +12,21 @@ class Quad:
     b: Point
     c: Point
     d: Point
+    tri_abc: Triangle
+    center: Point
+    is_rect: bool
+    is_square: bool
     sideab: Distance
     sidebc: Distance
     sidecd: Distance
     sideda: Distance
-    is_rect: bool
-    is_square: bool
-    tri_abc: Triangle
-    center: Point
     diaginal_len: Distance
-
-    def __init__(self) -> None:
-        super().__init__()
 
     def __str__(self) -> str:
         return f'a => {self.a}\nb => {self.b}\nc => {self.c}\nd => {self.d}'
+
+    def get_points(self) -> list[Point]:
+        return [self.a, self.b, self.c, self.d]
 
     def calculate_is_rect(self) -> None:
         self.is_rect = False
@@ -51,7 +51,9 @@ class Quad:
             redlog(f'found center at {self.center}')
             redlog(f'found d point at {self.d}')
 
-    def calculate_d(self, centerLeft: Point, centerRight: Point, dOpposite: Point) -> None:
+    def calculate_d(
+        self, centerLeft: Point, centerRight: Point, dOpposite: Point,
+    ) -> None:
         self.calculate_center(centerLeft, centerRight)
         self.d = Point(
             (self.center.x - dOpposite.x) + self.center.x,
@@ -61,7 +63,9 @@ class Quad:
 
     def calculate_center(self, p1: Point, p2: Point) -> None:
         self.center = Point(
-            (p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2,
+            (p1.x + p2.x) / 2,
+            (p1.y + p2.y) / 2,
+            (p1.z + p2.z) / 2,
         )
 
     def calculate_sides(self) -> None:
@@ -86,11 +90,11 @@ class Quad:
 
 
 def make_quad_with_triangle(tri: Triangle) -> Quad:
-    rect = Quad()
-    rect.tri_abc = tri
-    rect.a = tri.a
-    rect.b = tri.b
-    rect.c = tri.c
-    rect.calculate_is_rect()
+    quad = Quad()
+    quad.tri_abc = tri
+    quad.a = tri.a
+    quad.b = tri.b
+    quad.c = tri.c
+    quad.calculate_is_rect()
 
-    return rect
+    return quad
