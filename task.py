@@ -16,11 +16,11 @@ def solve(points: list[Point]) -> int:
     quad = make_quad_with_triangle(tri)
 
     if not quad.is_rect:
-        redlog('false', force=True)
+        redlog('False', force=True)
         redlog('ERROR task: Could not make a rectangle from given points')
         return 1
 
-    redlog('true', force=True)
+    redlog('True', force=True)
     redlog('INFO: Rectangle found')
 
     if quad.is_point_inside(x):

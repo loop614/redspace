@@ -75,6 +75,9 @@ class Quad:
         self.sideda = self.d.get_distance_to(self.a)
 
     def is_point_inside(self, x: Point) -> bool:
+        """
+        https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
+        """
         ab = make_vector_from_points(self.a, self.b)
         am = make_vector_from_points(self.a, x)
         bc = make_vector_from_points(self.b, self.c)

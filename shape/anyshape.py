@@ -4,9 +4,10 @@ from decimal import Decimal
 
 from primary.distance import Distance
 from primary.point import Point
+from shape.shapebase import ShapeBase
 
 
-class AnyShape:
+class AnyShape(ShapeBase):
     points: list[Point]
     polygon1_points: list[Point]
     polygon2_points: list[Point]
@@ -19,54 +20,20 @@ class AnyShape:
     are_all_sides_equal: bool
 
     def __init__(self, points: list[Point]) -> None:
+        super().__init__()
         self.points = points
         self.spational_diagonal = Distance(Decimal(0))
         self.are_all_sides_equal = False
         self.is_valid = False
         self.polygon1_sides = []
-        self.is_polygon()
+        self.calculate_is_polygon()
         self.calculate_sides()
         self.calculate_diagonal()
 
-    def is_polygon(self) -> None:
-        point_to_skip = len(self.points) - 1
-        for point in self.points:
-            candidate_for_rect = []
-            for j, point2 in enumerate(self.points):
-                if j != point_to_skip:
-                    candidate_for_rect.append(point2)
-            point_to_skip -= 1
-            xpivot = candidate_for_rect[0].x
-            ypivot = candidate_for_rect[0].y
-            zpivot = candidate_for_rect[0].z
-            x_same = y_same = z_same = True
-
-            for candidate in candidate_for_rect[1:]:
-                if xpivot != candidate.x:
-                    x_same = False
-                if ypivot != candidate.y:
-                    y_same = False
-                if zpivot != candidate.z:
-                    z_same = False
-
-            if not x_same and not y_same and not z_same:
-                continue
-
-            self.polygon1_points = candidate_for_rect
-            self.second_polygon_point = self.points[point_to_skip+1]
-            for candidate in candidate_for_rect:
-                if self.second_polygon_point.x == candidate.x and self.second_polygon_point.y == candidate.y:
-                    self.second_polygon_point_bellow = candidate
-                    self.is_valid = True
-                    break
-                elif self.second_polygon_point.y == candidate.y and self.second_polygon_point.z == candidate.z:
-                    self.second_polygon_point_bellow = candidate
-                    self.is_valid = True
-                    break
-                elif self.second_polygon_point.x == candidate.x and self.second_polygon_point.z == candidate.z:
-                    self.second_polygon_point_bellow = candidate
-                    self.is_valid = True
-                    break
+    def calculate_is_polygon(self) -> None:
+        (self.is_valid, self.polygon1_points, self.second_polygon_point, self.second_polygon_point_bellow) = (
+            self.separate_points_per_planes(self.points)
+        )
 
     def calculate_sides(self) -> None:
         d = self.points[0].get_distance_to(self.points[1])

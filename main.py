@@ -4,7 +4,7 @@ import os
 import sys
 from decimal import Decimal
 
-from appendix import solve as appendixsolver
+from addition import solve as additionsolver
 from primary.point import Point
 from redlogger import redlog
 from redlogger import turnLoggerOn
@@ -46,7 +46,7 @@ def solvefile(file_path: str) -> int:
         if file_of_two_d:
             res |= tasksolver(points2d)
         elif file_of_three_d and len(points3d) <= 5:
-            res |= appendixsolver(points3d)
+            res |= additionsolver(points3d)
         elif file_of_three_d and len(points3d) > 5:
             res |= anyshapesolver(points3d)
 
@@ -57,7 +57,7 @@ def main(extrafiles: bool = False) -> int:
     res: int = 0
     if not extrafiles:
         res |= solvefile(os.path.join('taskfiles', 'input1.txt'))
-        res |= solvefile(os.path.join('appendixfiles', 'input2.txt'))
+        res |= solvefile(os.path.join('additionfiles', 'input2.txt'))
         return res
 
     for task1file in os.listdir('taskfiles'):
@@ -66,10 +66,10 @@ def main(extrafiles: bool = False) -> int:
             res |= solvefile(os.path.join('taskfiles', task1file))
             redlog('')
 
-    for appendixfile in os.listdir('appendixfiles'):
-        if appendixfile.endswith('.txt'):
-            redlog(appendixfile)
-            res |= solvefile(os.path.join('appendixfiles', appendixfile))
+    for additionfile in os.listdir('additionfiles'):
+        if additionfile.endswith('.txt'):
+            redlog(additionfile)
+            res |= solvefile(os.path.join('additionfiles', additionfile))
             redlog('')
 
     return res

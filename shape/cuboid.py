@@ -1,23 +1,20 @@
 from __future__ import annotations
 
-import numpy as np
-
 from figure.quad import make_quad_with_triangle
 from figure.quad import Quad
 from figure.triangle import Triangle
 from primary.distance import Distance
 from primary.point import Point
-from primary.vector import Vector
+from primary.vector import make_vector_from_points
 from redlogger import redlog
+from shape.shapebase import ShapeBase
 
 
-class Cuboid:
+class Cuboid(ShapeBase):
     quadhorz1: Quad
     quadhorz2: Quad
     height: Distance
-    position1: Vector
-    position2: Vector
-    position3: Vector
+    is_valid: bool
     is_rectangular_prism: bool
     is_cube: bool
     spational_diagonal: Distance
@@ -25,7 +22,9 @@ class Cuboid:
     second_quad_point_bellow: Point
 
     def __init__(self, a: Point, b: Point, c: Point, d: Point) -> None:
+        super().__init__()
         points = [a, b, c, d]
+        self.is_valid = False
         self.is_rectangular_prism = False
         self.is_cube = False
         self.calculate_is_rectangular_prism(points)
@@ -35,55 +34,21 @@ class Cuboid:
         self.calculate_quadhorz2()
 
     def calculate_is_rectangular_prism(self, points_for_cuboid: list[Point]) -> None:
-        self.is_rectangular_prism = False
-        point_to_skip = len(points_for_cuboid) - 1
-        for point in points_for_cuboid:
-            candidate_for_rect = []
-            for j, point2 in enumerate(points_for_cuboid):
-                if j != point_to_skip:
-                    candidate_for_rect.append(point2)
-            point_to_skip -= 1
-            xpivot = candidate_for_rect[0].x
-            ypivot = candidate_for_rect[0].y
-            zpivot = candidate_for_rect[0].z
-            x_same = y_same = z_same = True
+        polygon1_points = []
+        (self.is_valid, polygon1_points, self.second_quad_point, self.second_quad_point_bellow) = (
+            self.separate_points_per_planes(points_for_cuboid)
+        )
+        if not self.is_valid:
+            return
 
-            for candidate in candidate_for_rect[1:]:
-                if xpivot != candidate.x:
-                    x_same = False
-                if ypivot != candidate.y:
-                    y_same = False
-                if zpivot != candidate.z:
-                    z_same = False
-
-            if not x_same and not y_same and not z_same:
-                continue
-
-            tri = Triangle(
-                candidate_for_rect[0],
-                candidate_for_rect[1],
-                candidate_for_rect[2],
-            )
-            self.quadhorz1 = make_quad_with_triangle(tri)
-            redlog(f'self.quadhorz1 is {self.quadhorz1}')
-            if not self.quadhorz1.is_rect:
-                continue
-
-            self.second_quad_point = points_for_cuboid[point_to_skip+1]
-            for candidate in candidate_for_rect:
-                if self.second_quad_point.x == candidate.x and self.second_quad_point.y == candidate.y:
-                    self.second_quad_point_bellow = candidate
-                    self.is_rectangular_prism = True
-                    break
-                elif self.second_quad_point.y == candidate.y and self.second_quad_point.z == candidate.z:
-                    self.second_quad_point_bellow = candidate
-                    self.is_rectangular_prism = True
-                    break
-                elif self.second_quad_point.x == candidate.x and self.second_quad_point.z == candidate.z:
-                    self.second_quad_point_bellow = candidate
-                    self.is_rectangular_prism = True
-                    break
-            break
+        tri = Triangle(
+            polygon1_points[0],
+            polygon1_points[1],
+            polygon1_points[2],
+        )
+        self.quadhorz1 = make_quad_with_triangle(tri)
+        redlog(f'self.quadhorz1 is {self.quadhorz1}')
+        self.is_rectangular_prism = self.quadhorz1.is_rect
 
     def calculate_height(self) -> None:
         for point in self.quadhorz1.get_points():
@@ -91,25 +56,19 @@ class Cuboid:
                 point.x == self.second_quad_point.x
                 and point.y == self.second_quad_point.y
             ):
-                self.height = self.second_quad_point.get_distance_to(
-                    point,
-                )
+                self.height = self.second_quad_point.get_distance_to(point)
                 return
             elif (
                 point.y == self.second_quad_point.y
                 and point.z == self.second_quad_point.z
             ):
-                self.height = self.second_quad_point.get_distance_to(
-                    point,
-                )
+                self.height = self.second_quad_point.get_distance_to(point)
                 return
             elif (
                 point.x == self.second_quad_point.x
                 and point.z == self.second_quad_point.z
             ):
-                self.height = self.second_quad_point.get_distance_to(
-                    point,
-                )
+                self.height = self.second_quad_point.get_distance_to(point)
                 return
 
     def calculate_is_cube(self) -> None:
@@ -137,11 +96,20 @@ class Cuboid:
         for point in self.quadhorz1.get_points():
             if self.second_quad_point_bellow is point:
                 continue
-            if self.second_quad_point_bellow.x == point.x and self.second_quad_point_bellow.y == point.y:
+            if (
+                self.second_quad_point_bellow.x == point.x
+                and self.second_quad_point_bellow.y == point.y
+            ):
                 linepoints.append(point)
-            elif self.second_quad_point_bellow.y == point.y and self.second_quad_point_bellow.z == point.z:
+            elif (
+                self.second_quad_point_bellow.y == point.y
+                and self.second_quad_point_bellow.z == point.z
+            ):
                 linepoints.append(point)
-            elif self.second_quad_point_bellow.x == point.x and self.second_quad_point_bellow.z == point.z:
+            elif (
+                self.second_quad_point_bellow.x == point.x
+                and self.second_quad_point_bellow.z == point.z
+            ):
                 linepoints.append(point)
 
         if len(linepoints) != 2:
@@ -169,48 +137,33 @@ class Cuboid:
         redlog(f'self.quadhorz2 is {self.quadhorz2}')
 
     def is_point_inside(self, point: Point):
-        prism = self.quadhorz1.get_points() + self.quadhorz2.get_points()
+        """
+        https://math.stackexchange.com/questions/1472049/check-if-a-point-is-inside-a-rectangular-shaped-area-3d
+        """
+        other_two_points: list[Point] = []
+        for point in self.quadhorz1.get_points():
+            if (
+                point is not self.second_quad_point
+                and point is not self.second_quad_point_bellow
+            ):
+                other_two_points.append(point)
 
-        def is_inside_bbox(point, bbox):
-            x, y, z = point.x, point.y, point.z
-            (x1, y1, z1), (x2, y2, z2) = bbox
-            return x1 <= x <= x2 and y1 <= y <= y2 and z1 <= z <= z2
+        p1 = self.second_quad_point_bellow
+        p5 = self.second_quad_point
+        p2 = other_two_points[0]
+        p4 = other_two_points[1]
 
-        # Create a bounding box for the prism
-        x_coords = [vertex.x for vertex in prism]
-        y_coords = [vertex.y for vertex in prism]
-        z_coords = [vertex.z for vertex in prism]
+        i = make_vector_from_points(p2, p1)
+        j = make_vector_from_points(p4, p1)
+        k = make_vector_from_points(p5, p1)
+        v = make_vector_from_points(point, p1)
 
-        bbox = (
-            (min(x_coords), min(y_coords), min(z_coords)),
-            (max(x_coords), max(y_coords), max(z_coords)),
+        vi = v.dot(i)
+        vj = v.dot(j)
+        vk = v.dot(k)
+
+        return (
+            0 < vi and vi < i.dot(i) and
+            0 < vj and vj < j.dot(j) and
+            0 < vk and vk < k.dot(k)
         )
-
-        # Check if the point is inside the bounding box
-        if not is_inside_bbox(point, bbox):
-            return False
-
-        # Check if the point is inside the prism
-        faces = [
-            [prism[0], prism[1], prism[2], prism[3]],
-            [prism[4], prism[5], prism[6], prism[7]],
-            [prism[0], prism[1], prism[5], prism[4]],
-            [prism[2], prism[3], prism[7], prism[6]],
-            [prism[0], prism[3], prism[7], prism[4]],
-            [prism[1], prism[2], prism[6], prism[5]],
-        ]
-
-        for face in faces:
-            A = (face[0].x, face[0].y, face[0].z)
-            B = (face[1].x, face[1].y, face[1].z)
-            C = (face[2].x, face[2].y, face[2].z)
-            normal = np.cross(
-                np.array(B) - np.array(A),
-                np.array(C) - np.array(A),
-            )
-            point_vector = np.array((point.x, point.y, point.z)) - np.array(A)
-
-            if np.dot(normal, point_vector) > 0:
-                return False
-
-        return True

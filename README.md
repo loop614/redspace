@@ -1,4 +1,5 @@
 ## Description
+Task
 Create a program that will receive as input the 2D coordinates of points A, B, C, and X. Let the coordinates be loaded from a file. The program should:
 1. check whether these three points can be the vertices of the rectangle. If they cannot, the program must stop working in a controlled manner and inform the user about the error,
 2. check whether point X is inside the rectangle ABC and inform the user about the result,
@@ -38,30 +39,26 @@ False
 - 2d objects (figure) done
 - 3d objects (shape) work in progress
     - TODOs:
-        - is point in cuboid
+        - spatial diagonal cuboid Q.E.D.
+        - is point in cuboid Q.E.D.
         - spatial diagonal anyshape
         - is point in anyshape
 
 ## Requirements
-- python3, numpy
-- optional python3-venv
+- python3
+- files that represent points of shape
+    - have n-1 points of shape base and 1 point of shape roof
+    - in case of the points of anyshape (more sides than rectagonal prism) points are expected to be in order
 
 ## Flags
 - by default runs for taskfiles/input1.txt and appendixfiles/input2.txt
-- extrafiles flag with include all txt files in taskfiles and appendixfiles
-- debug flag will print extra messages
+- extrafiles flag with include all txt files in taskfiles and additionfiles
+- debug flag will print all messages
 
 ## Quick Start
 ```console
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-$ python3 main.py --debug --extrafiles
-```
-- or if you have numpy on local machine
-```console
-$ python3 main.py --debug --extrafiles
-```
-```console
 $ python3 main.py
+```
+```console
+$ python3 main.py --debug --extrafiles
 ```
