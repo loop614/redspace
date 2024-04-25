@@ -14,10 +14,10 @@ from universal import solve as anyshapesolver
 
 def solvefile(file_path: str) -> int:
     res: int = 0
-    file_of_two_d = False
-    file_of_three_d = False
-    points2d = []
-    points3d = []
+    file_of_two_d: bool = False
+    file_of_three_d: bool = False
+    points2d: list[Vector] = []
+    points3d: list[Vector] = []
 
     with open(file_path) as file:
         for line in file.readlines():
@@ -76,8 +76,8 @@ def main(extrafiles: bool = False) -> int:
 
 
 if __name__ == '__main__':
-    debug = False
-    extrafiles = False
+    debug: bool = False
+    extrafiles: bool = False
     for arg in sys.argv:
         if arg == '--debug':
             turnLoggerOn()

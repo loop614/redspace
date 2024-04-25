@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from decimal import Decimal
+
 from figure.quad import make_quad_with_triangle
 from figure.quad import Quad
 from figure.triangle import Triangle
@@ -143,19 +145,19 @@ class Cuboid(ShapeBase):
             ):
                 other_two_points.append(point)
 
-        p1 = self.second_quad_point_bellow
-        p5 = self.second_quad_point
-        p2 = other_two_points[0]
-        p4 = other_two_points[1]
+        p1: Vector = self.second_quad_point_bellow
+        p5: Vector = self.second_quad_point
+        p2: Vector = other_two_points[0]
+        p4: Vector = other_two_points[1]
 
-        i = p1 - p2
-        j = p1 - p4
-        k = p1 - p5
-        v = p1 - point
+        i: Vector = p1 - p2
+        j: Vector = p1 - p4
+        k: Vector = p1 - p5
+        v: Vector = p1 - point
 
-        vi = v.dot(i)
-        vj = v.dot(j)
-        vk = v.dot(k)
+        vi: Decimal = v.dot(i)
+        vj: Decimal = v.dot(j)
+        vk: Decimal = v.dot(k)
 
         return (
             0 < vi and vi < i.dot(i) and

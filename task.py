@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from figure.quad import make_quad_with_triangle
+from figure.quad import Quad
 from figure.triangle import Triangle
 from primary.vector import Vector
 from redlogger import redlog
@@ -13,7 +14,7 @@ def solve(points: list[Vector]) -> int:
 
     tri: Triangle = Triangle(points[0], points[1], points[2])
     x: Vector = points[3]
-    quad = make_quad_with_triangle(tri)
+    quad: Quad = make_quad_with_triangle(tri)
 
     if not quad.is_rect:
         redlog('False', force=True)

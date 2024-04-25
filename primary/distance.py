@@ -5,7 +5,7 @@ from decimal import Decimal
 
 class Distance:
     val: Decimal
-    DISTANCE_ERROR_TOLARANCE = 0.05
+    DISTANCE_ERROR_TOLARANCE: Decimal = Decimal(0.05)
 
     def __init__(self, val: Decimal) -> None:
         self.val = val

@@ -36,7 +36,7 @@ class AnyShape(ShapeBase):
         )
 
     def calculate_sides(self) -> None:
-        d = self.points[0].get_distance_to(self.points[1])
+        d: Distance = self.points[0].get_distance_to(self.points[1])
         self.are_all_sides_equal = True
         self.second_polygon_side = self.second_polygon_point.get_distance_to(
             self.second_polygon_point_bellow,

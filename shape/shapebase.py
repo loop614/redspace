@@ -5,10 +5,10 @@ from primary.vector import Vector
 
 class ShapeBase:
     def separate_points_per_planes(self, points: list[Vector]):
-        is_valid = False
-        polygon1_points = []
-        second_polygon_point = None
-        second_polygon_point_bellow = None
+        is_valid: bool = False
+        polygon1_points: list[Vector] = []
+        second_polygon_point: Vector | None = None
+        second_polygon_point_bellow: Vector | None = None
 
         for point in reversed(points):
             candidate_for_rect = []
