@@ -5,7 +5,7 @@ import sys
 from decimal import Decimal
 
 from addition import solve as additionsolver
-from primary.point import Point
+from primary.vector import Vector
 from redlogger import redlog
 from redlogger import turnLoggerOn
 from task import solve as tasksolver
@@ -23,20 +23,20 @@ def solvefile(file_path: str) -> int:
         for line in file.readlines():
             numbers = line.strip().split(',')
             if len(numbers) == 2 and not file_of_three_d:
-                curr2Point = Point(
+                curr2Vector = Vector(
                     Decimal(numbers[0]),
                     Decimal(numbers[1]),
                 )
                 file_of_two_d = True
-                points2d.append(curr2Point)
+                points2d.append(curr2Vector)
             elif len(numbers) == 3 and not file_of_two_d:
-                curr3Point = Point(
+                curr3Vector = Vector(
                     Decimal(numbers[0]),
                     Decimal(numbers[1]),
                     Decimal(numbers[2]),
                 )
                 file_of_three_d = True
-                points3d.append(curr3Point)
+                points3d.append(curr3Vector)
             else:
                 redlog(
                     'File in unexpected format. Skipping line.',

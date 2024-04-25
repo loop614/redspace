@@ -3,23 +3,23 @@ from __future__ import annotations
 from decimal import Decimal
 
 from primary.distance import Distance
-from primary.point import Point
+from primary.vector import Vector
 from shape.shapebase import ShapeBase
 
 
 class AnyShape(ShapeBase):
-    points: list[Point]
-    polygon1_points: list[Point]
-    polygon2_points: list[Point]
+    points: list[Vector]
+    polygon1_points: list[Vector]
+    polygon2_points: list[Vector]
     polygon1_sides: list[Distance]
     is_valid: bool
     spational_diagonal: Distance
-    second_polygon_point: Point
-    second_polygon_point_bellow: Point
+    second_polygon_point: Vector
+    second_polygon_point_bellow: Vector
     second_polygon_side: Distance
     are_all_sides_equal: bool
 
-    def __init__(self, points: list[Point]) -> None:
+    def __init__(self, points: list[Vector]) -> None:
         super().__init__()
         self.points = points
         self.spational_diagonal = Distance(Decimal(0))
@@ -58,5 +58,5 @@ class AnyShape(ShapeBase):
     def calculate_diagonal(self) -> None:
         pass
 
-    def is_point_inside(self, point: Point) -> bool:
+    def is_point_inside(self, point: Vector) -> bool:
         return False

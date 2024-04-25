@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from primary.point import Point
+from primary.vector import Vector
 
 
 class ShapeBase:
-    def separate_points_per_planes(self, points: list[Point]):
+    def separate_points_per_planes(self, points: list[Vector]):
         is_valid = False
         polygon1_points = []
         second_polygon_point = None

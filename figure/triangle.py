@@ -5,22 +5,22 @@ from decimal import Decimal
 
 from primary.angle import Angle
 from primary.distance import Distance
-from primary.point import Point
+from primary.vector import Vector
 from redlogger import redlog
 
 
 class Triangle:
-    a: Point
-    b: Point
-    c: Point
+    a: Vector
+    b: Vector
+    c: Vector
     sidea: Distance
     sideb: Distance
     sidec: Distance
     alpha: Angle
     beta: Angle
-    gama: Angle
+    gamma: Angle
 
-    def __init__(self, a: Point, b: Point, c: Point) -> None:
+    def __init__(self, a: Vector, b: Vector, c: Vector) -> None:
         self.a = a
         self.b = b
         self.c = c
@@ -44,7 +44,7 @@ class Triangle:
                 ),
             ),
         )
-        self.gama = Angle(
+        self.gamma = Angle(
             Decimal(
                 math.degrees(
                     math.acos(
@@ -54,5 +54,5 @@ class Triangle:
                 ),
             ),
         )
-        self.beta = Angle(180 - self.alpha.val - self.gama.val)
-        redlog(f'angles {self.alpha}, {self.beta}, {self.gama}')
+        self.beta = Angle(180 - self.alpha.val - self.gamma.val)
+        redlog(f'angles {self.alpha}, {self.beta}, {self.gamma}')

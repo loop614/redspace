@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from primary.point import Point
+from primary.vector import Vector
 from redlogger import redlog
 from shape.anyshape import AnyShape
 
 
-def solve(points: list[Point]) -> int:
+def solve(points: list[Vector]) -> int:
     if len(points) < 6:
         redlog(
             'ERROR: Expected to find more than 5 points for solving the universal anyshape',
@@ -27,7 +27,7 @@ def solve(points: list[Point]) -> int:
     else:
         redlog('anyshape has not all sides equal')
 
-    x: Point = points[-1]
+    x: Vector = points[-1]
     if poly.is_point_inside(x):
         redlog(f'{x} is in the anyshape')
     else:

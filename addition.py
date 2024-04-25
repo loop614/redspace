@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from primary.point import Point
+from primary.vector import Vector
 from redlogger import redlog
 from shape.cuboid import Cuboid
 
 
-def solve(points: list[Point]) -> int:
+def solve(points: list[Vector]) -> int:
     if len(points) != 5:
         redlog('ERROR: Expected to find 5 points for solving the appendix')
         return 1
 
     c: Cuboid = Cuboid(points[0], points[1], points[2], points[3])
-    x: Point = points[4]
+    x: Vector = points[4]
     if c.is_rectangular_prism:
         redlog('it is_rectangular_prism')
         redlog(f'spational diagonal = {c.spational_diagonal}')
