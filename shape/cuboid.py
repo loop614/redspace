@@ -137,18 +137,26 @@ class Cuboid(ShapeBase):
         """
         https://math.stackexchange.com/questions/1472049/check-if-a-point-is-inside-a-rectangular-shaped-area-3d
         """
-        other_two_points: list[Vector] = []
-        for point in self.quadhorz1.get_points():
-            if (
-                point is not self.second_quad_point
-                and point is not self.second_quad_point_bellow
-            ):
-                other_two_points.append(point)
+        pivot: int = 0
+        quadhorz1_points: list[Vector] = self.quadhorz1.get_points()
+        for index, point in enumerate(quadhorz1_points):
+            if point is self.second_quad_point_bellow:
+                pivot = index
+                break
+
+        next_pivot: int = pivot + 1
+        prev_pivot: int = pivot - 1
+        if next_pivot > len(quadhorz1_points) - 1:
+            next_pivot = 0
+
+        if prev_pivot < 0:
+            prev_pivot = len(quadhorz1_points) - 1
 
         p1: Vector = self.second_quad_point_bellow
         p5: Vector = self.second_quad_point
-        p2: Vector = other_two_points[0]
-        p4: Vector = other_two_points[1]
+
+        p2: Vector = quadhorz1_points[prev_pivot]
+        p4: Vector = quadhorz1_points[next_pivot]
 
         i: Vector = p1 - p2
         j: Vector = p1 - p4
