@@ -50,6 +50,10 @@ False
     - have n-1 points of shape base and 1 point of shape roof
     - in case of the points of anyshape (more sides than rectagonal prism) points are expected to be in order
 
+## Visualization with raylib
+- [figures](https://github.com/loop614/rayquad)
+- [shapes](https://github.com/loop614/raycuboid)
+
 ## Flags
 - by default runs for taskfiles/input1.txt and appendixfiles/input2.txt
 - extrafiles flag with include all txt files in taskfiles and additionfiles
