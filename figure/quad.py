@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from decimal import Decimal
+
 from figure.triangle import Triangle
 from primary.distance import Distance
 from primary.vector import Vector
@@ -15,6 +17,7 @@ class Quad:
     center: Vector
     is_rect: bool
     is_square: bool
+    is_tilted: bool
     sideab: Distance
     sidebc: Distance
     sidecd: Distance
@@ -46,12 +49,20 @@ class Quad:
             self.calculate_d(self.a, self.b, self.c)
 
         if self.is_rect:
+            self.calculate_is_tilted()
             self.calculate_sides()
             redlog(f'found center at {self.center}')
             redlog(f'found d point at {self.d}')
+            if self.is_tilted:
+                redlog('it is tilted')
+            else:
+                redlog('it is not tilted')
 
     def calculate_d(
-        self, centerLeft: Vector, centerRight: Vector, dOpposite: Vector,
+        self,
+        centerLeft: Vector,
+        centerRight: Vector,
+        dOpposite: Vector,
     ) -> None:
         self.calculate_center(centerLeft, centerRight)
         self.d = Vector(
@@ -72,6 +83,14 @@ class Quad:
         self.sidebc = self.b.get_distance_to(self.c)
         self.sidecd = self.c.get_distance_to(self.d)
         self.sideda = self.d.get_distance_to(self.a)
+
+    def calculate_is_tilted(self) -> None:
+        self.is_tilted = not (
+            Vector(Decimal(1), Decimal(0)).angle_beetwen(self.b - self.a).is0()
+            or Vector(Decimal(1), Decimal(0)).angle_beetwen(self.c - self.b).is0()
+            or Vector(Decimal(1), Decimal(0)).angle_beetwen(self.d - self.c).is0()
+            or Vector(Decimal(1), Decimal(0)).angle_beetwen(self.d - self.a).is0()
+        )
 
     def is_point_inside(self, x: Vector) -> bool:
         """
